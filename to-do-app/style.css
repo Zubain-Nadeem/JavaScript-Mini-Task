@@ -78,6 +78,11 @@ li{
   padding: 5px;
   border-radius: 3px;
 }
+.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
 @media (max-width: 600px) {
   .text-image {
     display: flex;

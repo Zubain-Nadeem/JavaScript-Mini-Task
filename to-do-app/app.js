@@ -1,95 +1,72 @@
-/*
 let todos = [];
-let olEl = document.querySelectorAll('.all-todos')[0];
-let newTodoEl = document.querySelectorAll('#new-todo')[0];
-let addBtnEl = document.querySelectorAll('.add-btn')[0];
-let editIndex;
+let taskListEl = document.querySelector('.taskList');
+let inputEl = document.querySelector('.text-input');
+let editIndex = null;
 
-function renderTodos() {
-    olEl.innerHTML = "";
-    for (let i = 0; i < todos.length; i++) {
-        let todoItem = todos[i];
-        let liEl = `<li>
-                        ${todoItem}
-                        <button onclick="deleteTodo(${i})">
-                            Delete
-                        </button>
-                        <button onclick="editTodo(${i})">
-                            Edit
-                        </button>
-                    </li>`;
-        olEl.innerHTML += liEl;
-    }
-}
+function taskAdd() {
+    const taskText = inputEl.value.trim();
+    if (taskText === "") return;
 
-function addTodo() {
-    let newTodo = newTodoEl.value;
-    todos.push(newTodo);
-    renderTodos();
-    newTodoEl.value = "";
-}
-
-function deleteTodo(index) {
-    todos.splice(index, 1);
-    renderTodos();
-}
-
-function editTodo(index) {
-    let editItem = todos[index];
-    editIndex = index;
-    newTodoEl.value = editItem
-    addBtnEl.innerHTML = "Save";
-    addBtnEl.onclick = saveTodo;
-}
-
-function saveTodo() {
-    console.log(newTodoEl.value);
-    console.log(editIndex);
-    todos.splice(editIndex, 1, newTodoEl.value);
-    renderTodos();
-    addBtnEl.innerHTML = "Add";
-    addBtnEl.onclick = addTodo;
-    editIndex  = undefined;
-    newTodoEl.value = "";
-    
-}
- */
-
-let todos = [];
-let ulEl = document.querySelectorAll(".taskList")[0];
-let inputEl = document.querySelectorAll('.text-input')
-
-function renderTodos() {
-  ulEl.innerHTML = "";
-  for (let i = 0; i < todos.length; i++) {
-    let todoItem = todos[i];
-    let liEl = `<li>
-        <input type = "checkbox" class = "check" onclick = "taskCheck(this)">
-        ${todoItem}
-       <div> <button onclick="deleteTodo(${i})">
-            Delete
-        </button>
-        <button onclick="editTodo(${i})">
-            Edit
-        </button></div>
-    </li>`;
-    ulEl.innerHTML += liEl;
-  }
-}
-
-function taskAdd(){
-    let newTodo = inputEl.value;
-    todos.push(newTodo);
-    renderTodos()
-}
-
-function taskCheck(){
-    let taskItem = checkbox; 
-    if (checkbox.checked) {
-        taskItem.style.color = "gray"; 
-        taskItem.style.textDecoration = "line-through"; 
+    if (editIndex !== null) {
+        todos[editIndex].text = taskText;
+        editIndex = null;
     } else {
-        taskItem.style.color = "black"; 
-        taskItem.style.textDecoration = "none"; 
+        todos.push({ text: taskText, completed: false });
     }
+
+    inputEl.value = ""; // clear input
+    renderTasks();
+}
+
+function renderTasks() {
+    taskListEl.innerHTML = "";
+
+    todos.forEach((task, index) => {
+        const li = document.createElement('li');
+
+        // Checkbox
+        const checkbox = document.createElement('input');
+        checkbox.type = "checkbox";
+        checkbox.checked = task.completed;
+        checkbox.onchange = () => toggleComplete(index);
+
+        // Task text
+        const span = document.createElement('span');
+        span.textContent = task.text;
+        if (task.completed) span.classList.add('completed');
+
+        // Edit button
+        const editBtn = document.createElement('button');
+        editBtn.textContent = "Edit";
+        editBtn.classList.add('delete');
+        editBtn.onclick = () => editTask(index);
+
+        // Delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = "Delete";
+        deleteBtn.classList.add('delete');
+        deleteBtn.onclick = () => deleteTask(index);
+
+        li.appendChild(checkbox);
+        li.appendChild(span);
+        li.appendChild(editBtn);
+        li.appendChild(deleteBtn);
+
+        taskListEl.appendChild(li);
+    });
+}
+
+function toggleComplete(index) {
+    todos[index].completed = !todos[index].completed;
+    renderTasks();
+}
+
+function deleteTask(index) {
+    todos.splice(index, 1);
+    renderTasks();
+}
+
+function editTask(index) {
+    inputEl.value = todos[index].text;
+    editIndex = index;
 }
