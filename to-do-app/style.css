@@ -147,6 +147,11 @@ li{
     padding: 5px;
     border-radius: 3px;
   }
+  .completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
 }
 
 @media (min-width: 600px) and (max-width: 767px) {
@@ -179,6 +184,11 @@ li{
     border-radius: 5px;
     border: 1px solid #000;
   }
+  .completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
@@ -263,5 +273,12 @@ li{
     color: #ffffff;
     padding: 5px;
     border-radius: 3px;
+ 
   }
+
+  .completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
 }
